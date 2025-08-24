@@ -24,6 +24,15 @@ const funnyQuotes = [
 
 // Verfügbare Termine (nur wenige für den Spaß)
 const availableDates = [
+    '2024-12-15',
+    '2024-12-22',
+    '2024-12-29',
+    '2025-01-05',
+    '2025-01-12',
+    '2025-01-19',
+    '2025-08-15',
+    '2025-08-24',
+    '2025-08-30',
     '2025-09-05',
     '2025-09-30',
     '2025-10-05',
@@ -68,6 +77,7 @@ function playFunnySound(frequency = 440, duration = 200) {
 let currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
+let currentSelectedDate = null; // Speichert das aktuell ausgewählte Datum
 
 // DOM-Elemente
 const calendar = document.getElementById('calendar');
@@ -76,10 +86,12 @@ const prevMonthBtn = document.getElementById('prevMonth');
 const nextMonthBtn = document.getElementById('nextMonth');
 const funnyQuoteElement = document.getElementById('funnyQuote');
 const statusTextElement = document.getElementById('statusText');
+const bookingForm = document.getElementById('bookingForm');
+const appointmentForm = document.getElementById('appointmentForm');
 
 // Event Listener
-prevMonthBtn.addEventListener('click', () => changeMonth(-1));
-nextMonthBtn.addEventListener('click', () => changeMonth(1));
+// prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+// nextMonthBtn.addEventListener('click', () => changeMonth(1));
 
 // Kalender initialisieren
 function initCalendar() {
@@ -104,10 +116,15 @@ function changeMonth(direction) {
 
 // Kalender rendern
 function renderCalendar() {
+    console.log(`Rendere Kalender für: ${currentMonth + 1}/${currentYear}`); // Debug-Ausgabe
+    
     const firstDay = new Date(currentYear, currentMonth, 1);
     const lastDay = new Date(currentYear, currentMonth + 1, 0);
     const startDate = new Date(firstDay);
     const endDate = new Date(lastDay);
+    
+    console.log(`Erster Tag: ${firstDay.toLocaleDateString('de-DE')}`); // Debug-Ausgabe
+    console.log(`Letzter Tag: ${endDate.toLocaleDateString('de-DE')}`); // Debug-Ausgabe
     
     // Ersten Tag der Woche anpassen (Montag = 0)
     const firstDayOfWeek = firstDay.getDay();
@@ -193,37 +210,23 @@ function isTodayDate(date) {
 
 // Termin-Status anzeigen
 function showDayStatus(date) {
+    console.log('showDayStatus aufgerufen für:', date); // Debug-Ausgabe
+    
+    // Ausgewähltes Datum speichern
+    currentSelectedDate = date;
+    
     const dateString = formatDate(date);
     const isAvailable = availableDates.includes(dateString);
     
-    // Datum im deutschen Format formatieren
-    const formattedDate = date.toLocaleDateString('de-DE', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
+    console.log('Datum:', dateString, 'Verfügbar:', isAvailable); // Debug-Ausgabe
+    console.log('Verfügbare Termine:', availableDates); // Debug-Ausgabe
     
     if (isAvailable) {
-        statusTextElement.innerHTML = `
-            <div style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3); animation: bounce 0.6s ease-in-out;">
-                <h4 style="margin: 0 0 10px 0; font-size: 1.3rem;">🎉🎊🎉 MEGA GLÜCK! 🎉🎊🎉</h4>
-                <p style="margin: 0; font-size: 1.1rem; font-weight: 600;">${formattedDate}</p>
-                <small style="opacity: 0.9; display: block; margin-top: 10px;">Das ist ein Wunder! Schnell buchen, bevor es weg ist! 🚀</small>
-                <div style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">
-                    🎯 Nur noch ${Math.floor(Math.random() * 5) + 1} Termine verfügbar!<br>
-                    ⚡ Schnell sein lohnt sich! 
-                </div>
-            </div>
-        `;
-        
-        // Mega Konfetti-Explosion für verfügbare Termine
-        createMegaConfetti();
-        
-        // Lustigen Sound abspielen
-        playFunnySound(1000, 800);
-        
+        console.log('Verfügbarer Termin - zeige Popup'); // Debug-Ausgabe
+        // Bei verfügbaren Terminen das Popup anzeigen
+        showPopup(date);
     } else {
+        console.log('Ausgebuchter Termin - zeige normale Nachricht'); // Debug-Ausgabe
         const funnyReasons = [
             "Weil wir so beliebt sind! 😎",
             "Weil Zeit bei uns Gold wert ist! 💰",
@@ -237,8 +240,19 @@ function showDayStatus(date) {
         
         const randomReason = funnyReasons[Math.floor(Math.random() * funnyReasons.length)];
         
+        // Formular verstecken falls es angezeigt war
+        bookingForm.style.display = 'none';
+        
+        // Datum im deutschen Format formatieren
+        const formattedDate = date.toLocaleDateString('de-DE', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
         statusTextElement.innerHTML = `
-            <div style="background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3); animation: shake 0.5s ease-in-out;">
+            <div style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(244, 67, 54, 0.3); animation: shake 0.5s ease-in-out;">
                 <h4 style="margin: 0 0 10px 0; font-size: 1.3rem;">😅😅😅 AUSGEBUCHT! 😅😅😅</h4>
                 <p style="margin: 0; font-size: 1.1rem; font-weight: 600;">${formattedDate}</p>
                 <small style="opacity: 0.9; display: block; margin-top: 10px;">${randomReason}</small>
@@ -363,23 +377,90 @@ function createMegaConfetti() {
 
 // Witzige Hover-Effekte für Kalendertage
 function addFunnyHoverEffects() {
-    const days = document.querySelectorAll('.calendar-day');
-    days.forEach(day => {
-        day.addEventListener('mouseenter', () => {
-            if (!day.classList.contains('other-month')) {
-                day.style.transform = 'scale(1.1) rotate(5deg)';
-                day.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
-                
-                // Lustigen Sound abspielen
-                playFunnySound(600, 100);
-            }
-        });
-        
-        day.addEventListener('mouseleave', () => {
-            day.style.transform = '';
-            day.style.boxShadow = '';
-        });
+    // Diese Funktion wird nur einmal beim Laden der Seite aufgerufen
+    // Die Hover-Effekte werden über CSS gehandhabt
+}
+
+// Terminbuchungs-Formular anzeigen
+function showBookingForm(date) {
+    console.log('showBookingForm aufgerufen für:', date); // Debug-Ausgabe
+    
+    const formattedDate = date.toLocaleDateString('de-DE', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
     });
+    
+    // Status-Text aktualisieren
+    statusTextElement.innerHTML = `
+        <div style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3); animation: bounce 0.6s ease-in-out;">
+            <h4 style="margin: 0 0 10px 0; font-size: 1.3rem;">🎉🎊🎉 MEGA GLÜCK! 🎉🎊🎉</h4>
+            <p style="margin: 0; font-size: 1.1rem; font-weight: 600;">${formattedDate}</p>
+            <small style="opacity: 0.9; display: block; margin-top: 10px;">Das ist ein Wunder! Schnell buchen, bevor es weg ist! 🚀</small>
+            <div style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">
+                🎯 Nur noch ${Math.floor(Math.random() * 5) + 1} Termine verfügbar!<br>
+                ⚡ Schnell sein lohnt sich! 
+            </div>
+        </div>
+    `;
+    
+    // Formular anzeigen
+    if (bookingForm) {
+        console.log('Formular wird angezeigt'); // Debug-Ausgabe
+        bookingForm.style.display = 'block';
+        bookingForm.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        console.error('bookingForm Element nicht gefunden!'); // Debug-Ausgabe
+    }
+    
+    // Mega Konfetti-Explosion
+    createMegaConfetti();
+    
+    // Lustigen Sound abspielen
+    playFunnySound(1000, 800);
+}
+
+// Popup für Terminbuchung anzeigen
+function showPopup(date) {
+    const formattedDate = date.toLocaleDateString('de-DE', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    
+    // Datum im Popup anzeigen
+    document.getElementById('popupDate').textContent = `📅 ${formattedDate}`;
+    
+    // Popup anzeigen
+    document.getElementById('popupOverlay').style.display = 'flex';
+    
+    // Mega Konfetti-Explosion
+    createMegaConfetti();
+    
+    // Lustigen Sound abspielen
+    playFunnySound(1000, 800);
+}
+
+// Popup schließen
+function closePopup() {
+    document.getElementById('popupOverlay').style.display = 'none';
+    
+    // Formular zurücksetzen
+    document.getElementById('popupForm').reset();
+}
+
+// Terminbuchungs-Formular verstecken
+function hideBookingForm() {
+    bookingForm.style.display = 'none';
+    
+    // Status zurücksetzen
+    statusTextElement.innerHTML = `
+        <div style="text-align: center; color: #667eea; font-style: italic;">
+            <p>Klicke auf einen Tag, um den Termin-Status zu sehen!</p>
+        </div>
+    `;
 }
 
 // Konfetti bei verfügbaren Terminen
@@ -389,8 +470,48 @@ document.addEventListener('click', (e) => {
     }
 });
 
+// Test-Funktion für verfügbare Termine
+function testAvailableDates() {
+    console.log('=== TEST VERFÜGBARE TERMINE ===');
+    availableDates.forEach(dateStr => {
+        const testDate = new Date(dateStr);
+        console.log(`Termin: ${dateStr} -> ${testDate.toLocaleDateString('de-DE')}`);
+    });
+    console.log('=== ENDE TEST ===');
+}
+
 // Initialisierung der Audio-Funktionen
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM geladen - initialisiere Kalender...'); // Debug-Ausgabe
+    
+    // Test der verfügbaren Termine
+    testAvailableDates();
+    
+    // DOM-Elemente neu abrufen
+    const calendar = document.getElementById('calendar');
+    const currentMonthElement = document.getElementById('currentMonth');
+    const prevMonthBtn = document.getElementById('prevMonth');
+    const nextMonthBtn = document.getElementById('nextMonth');
+    const funnyQuoteElement = document.getElementById('funnyQuote');
+    const statusTextElement = document.getElementById('statusText');
+    const bookingForm = document.getElementById('bookingForm');
+    const appointmentForm = document.getElementById('appointmentForm');
+    
+    console.log('DOM-Elemente gefunden:', {
+        calendar: !!calendar,
+        currentMonthElement: !!currentMonthElement,
+        prevMonthBtn: !!prevMonthBtn,
+        nextMonthBtn: !!nextMonthBtn,
+        funnyQuoteElement: !!funnyQuoteElement,
+        statusTextElement: !!statusTextElement,
+        bookingForm: !!bookingForm,
+        appointmentForm: !!appointmentForm
+    }); // Debug-Ausgabe
+    
+    // Event Listener für Navigation
+    if (prevMonthBtn) prevMonthBtn.addEventListener('click', () => changeMonth(-1));
+    if (nextMonthBtn) nextMonthBtn.addEventListener('click', () => changeMonth(1));
+    
     initCalendar();
     addSpecialQuotes();
     
@@ -398,4 +519,120 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateFunnyQuote, 10000);
     initAudio();
     addFunnyHoverEffects();
+    
+    // Event-Listener für das Terminbuchungs-Formular
+    if (appointmentForm) {
+        appointmentForm.addEventListener('submit', handleBookingSubmit);
+        console.log('Event-Listener für Formular hinzugefügt'); // Debug-Ausgabe
+    } else {
+        console.error('appointmentForm nicht gefunden!'); // Debug-Ausgabe
+    }
+    
+    // Event-Listener für das Popup-Formular
+    const popupForm = document.getElementById('popupForm');
+    if (popupForm) {
+        popupForm.addEventListener('submit', handlePopupSubmit);
+        console.log('Event-Listener für Popup-Formular hinzugefügt'); // Debug-Ausgabe
+    } else {
+        console.error('popupForm nicht gefunden!'); // Debug-Ausgabe
+    }
+    
+    console.log('Initialisierung abgeschlossen'); // Debug-Ausgabe
 });
+
+// Terminbuchung verarbeiten
+function handleBookingSubmit(e) {
+    e.preventDefault();
+    
+    // Formulardaten sammeln
+    const formData = {
+        date: currentSelectedDate,
+        time: document.getElementById('appointmentTime').value,
+        reason: document.getElementById('appointmentReason').value,
+        name: document.getElementById('customerName').value,
+        email: document.getElementById('customerEmail').value
+    };
+    
+    // Erfolgsmeldung anzeigen
+    statusTextElement.innerHTML = `
+        <div style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 25px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3); animation: bounce 0.8s ease-in-out;">
+            <h4 style="margin: 0 0 15px 0; font-size: 1.5rem;">🎉🎊🎉 TERMIN GEBUCHT! 🎉🎊🎉</h4>
+            <p style="margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 600;">${formData.date.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p style="margin: 0 0 10px 0; font-size: 1.1rem;">⏰ Uhrzeit: ${formData.time} Uhr</p>
+            <p style="margin: 0 0 15px 0; font-size: 1.1rem;">👤 Name: ${formData.name}</p>
+            <small style="opacity: 0.9; display: block; margin-top: 15px;">
+                🚀 Dein Termin wurde erfolgreich gebucht!<br>
+                📧 Du erhältst eine Bestätigung per E-Mail.
+            </small>
+        </div>
+    `;
+    
+    // Formular verstecken
+    hideBookingForm();
+    
+    // Formular zurücksetzen
+    appointmentForm.reset();
+    
+    // Mega Konfetti-Explosion
+    createMegaConfetti();
+    setTimeout(() => createMegaConfetti(), 500);
+    
+    // Lustigen Sound abspielen
+    playFunnySound(1200, 1000);
+    
+    // Erfolgsmeldung nach 5 Sekunden zurücksetzen
+    setTimeout(() => {
+        statusTextElement.innerHTML = `
+            <div style="text-align: center; color: #667eea; font-style: italic;">
+                <p>Klicke auf einen Tag, um den Termin-Status zu sehen!</p>
+            </div>
+        `;
+    }, 5000);
+}
+
+// Popup-Formular verarbeiten
+function handlePopupSubmit(e) {
+    e.preventDefault();
+    
+    // Formulardaten sammeln
+    const formData = {
+        date: currentSelectedDate,
+        time: document.getElementById('popupTime').value,
+        reason: document.getElementById('popupReason').value,
+        name: document.getElementById('popupName').value,
+        email: document.getElementById('popupEmail').value
+    };
+    
+    // Erfolgsmeldung anzeigen
+    statusTextElement.innerHTML = `
+        <div style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 25px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3); animation: bounce 0.8s ease-out;">
+            <h4 style="margin: 0 0 15px 0; font-size: 1.5rem;">🎉🎊🎉 TERMIN GEBUCHT! 🎉🎊🎉</h4>
+            <p style="margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 600;">${formData.date.toLocaleDateString('de-DE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+            <p style="margin: 0 0 10px 0; font-size: 1.1rem;">⏰ Uhrzeit: ${formData.time} Uhr</p>
+            <p style="margin: 0 0 15px 0; font-size: 1.1rem;">👤 Name: ${formData.name}</p>
+            <small style="opacity: 0.9; display: block; margin-top: 15px;">
+                🚀 Dein Termin wurde erfolgreich gebucht!<br>
+                📧 Du erhältst eine Bestätigung per E-Mail.
+            </small>
+        </div>
+    `;
+    
+    // Popup schließen
+    closePopup();
+    
+    // Mega Konfetti-Explosion
+    createMegaConfetti();
+    setTimeout(() => createMegaConfetti(), 500);
+    
+    // Lustigen Sound abspielen
+    playFunnySound(1200, 1000);
+    
+    // Erfolgsmeldung nach 5 Sekunden zurücksetzen
+    setTimeout(() => {
+        statusTextElement.innerHTML = `
+            <div style="text-align: center; color: #667eea; font-style: italic;">
+                <p>Klicke auf einen Tag, um den Termin-Status zu sehen!</p>
+            </div>
+        `;
+    }, 5000);
+}

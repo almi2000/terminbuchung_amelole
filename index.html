@@ -43,6 +43,100 @@
             <p id="statusText">Klicke auf einen Tag, um den Termin-Status zu sehen!</p>
         </div>
 
+        <!-- Terminbuchungs-Formular -->
+        <div class="booking-form" id="bookingForm" style="display: none;">
+            <h3>🎉 Termin buchen! 🎉</h3>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label for="appointmentTime">⏰ Gewünschte Uhrzeit:</label>
+                    <select id="appointmentTime" required>
+                        <option value="">Bitte wählen...</option>
+                        <option value="09:00">09:00 Uhr</option>
+                        <option value="10:00">10:00 Uhr</option>
+                        <option value="11:00">11:00 Uhr</option>
+                        <option value="12:00">12:00 Uhr</option>
+                        <option value="13:00">13:00 Uhr</option>
+                        <option value="14:00">14:00 Uhr</option>
+                        <option value="15:00">15:00 Uhr</option>
+                        <option value="16:00">16:00 Uhr</option>
+                        <option value="17:00">17:00 Uhr</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="appointmentReason">📝 Grund für den Termin:</label>
+                    <textarea id="appointmentReason" placeholder="Erzähle uns, wofür du den Termin brauchst..." required rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerName">👤 Dein Name:</label>
+                    <input type="text" id="customerName" placeholder="Wie sollen wir dich nennen?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customerEmail">📧 E-Mail:</label>
+                    <input type="email" id="customerEmail" placeholder="deine.email@beispiel.de" required>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="btn-book">🚀 Termin buchen!</button>
+                    <button type="button" class="btn-cancel" onclick="hideBookingForm()">❌ Abbrechen</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Popup für Terminbuchung -->
+        <div class="popup-overlay" id="popupOverlay" style="display: none;">
+            <div class="popup-content">
+                <div class="popup-header">
+                    <h3>🎉 Termin buchen! 🎉</h3>
+                    <button class="popup-close" onclick="closePopup()">×</button>
+                </div>
+                
+                <div class="popup-body">
+                    <div class="popup-date" id="popupDate"></div>
+                    
+                    <form id="popupForm">
+                        <div class="form-group">
+                            <label for="popupTime">⏰ Gewünschte Uhrzeit:</label>
+                            <select id="popupTime" required>
+                                <option value="">Bitte wählen...</option>
+                                <option value="09:00">09:00 Uhr</option>
+                                <option value="10:00">10:00 Uhr</option>
+                                <option value="11:00">11:00 Uhr</option>
+                                <option value="12:00">12:00 Uhr</option>
+                                <option value="13:00">13:00 Uhr</option>
+                                <option value="14:00">14:00 Uhr</option>
+                                <option value="15:00">15:00 Uhr</option>
+                                <option value="16:00">16:00 Uhr</option>
+                                <option value="17:00">17:00 Uhr</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="popupReason">📝 Grund für den Termin:</label>
+                            <textarea id="popupReason" placeholder="Erzähle uns, wofür du den Termin brauchst..." required rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="popupName">👤 Dein Name:</label>
+                            <input type="text" id="popupName" placeholder="Wie sollen wir dich nennen?" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="popupEmail">📧 E-Mail:</label>
+                            <input type="email" id="popupEmail" placeholder="deine.email@beispiel.de" required>
+                        </div>
+                        
+                        <div class="popup-buttons">
+                            <button type="submit" class="btn-book">🚀 Termin buchen!</button>
+                            <button type="button" class="btn-cancel" onclick="closePopup()">❌ Abbrechen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="fun-facts">
             <h3>🎭 Lustige Fakten über Amelie & Ole's Zeitmanagement:</h3>
             <ul>
