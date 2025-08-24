@@ -152,7 +152,7 @@ body {
 .calendar-day.booked:hover {
     transform: scale(1.1) rotate(-5deg);
     animation: shake 0.5s ease-in-out;
-    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+    box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5);
 }
 
 .calendar-day.today:hover {
@@ -168,9 +168,9 @@ body {
 }
 
 .calendar-day.booked {
-    background: linear-gradient(135deg, #ff9800, #f57c00);
+    background: linear-gradient(135deg, #f44336, #d32f2f);
     color: white;
-    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
 }
 
 .calendar-day.other-month {
