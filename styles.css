@@ -87,8 +87,14 @@ body {
 }
 
 .nav-btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.1);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    animation: wiggle 0.6s ease-in-out;
+}
+
+.nav-btn:active {
+    transform: translateY(0) scale(0.95);
+    animation: shake 0.3s ease-in-out;
 }
 
 .month-title {
@@ -134,6 +140,25 @@ body {
 
 .calendar-day:hover {
     transform: scale(1.05);
+    animation: wiggle 0.6s ease-in-out;
+}
+
+.calendar-day.available:hover {
+    transform: scale(1.1) rotate(5deg);
+    animation: pulse 1s infinite;
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
+}
+
+.calendar-day.booked:hover {
+    transform: scale(1.1) rotate(-5deg);
+    animation: shake 0.5s ease-in-out;
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+}
+
+.calendar-day.today:hover {
+    transform: scale(1.15);
+    animation: float 2s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.8);
 }
 
 .calendar-day.available {
@@ -143,9 +168,9 @@ body {
 }
 
 .calendar-day.booked {
-    background: linear-gradient(135deg, #f44336, #d32f2f);
+    background: linear-gradient(135deg, #ff9800, #f57c00);
     color: white;
-    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
 }
 
 .calendar-day.other-month {
@@ -159,8 +184,10 @@ body {
 }
 
 .calendar-day.today {
-    border: 3px solid #667eea;
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+    border: 3px solid #4CAF50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+    background: linear-gradient(135deg, #66bb6a, #4CAF50);
+    color: white;
 }
 
 .booking-info {
@@ -182,6 +209,10 @@ body {
 .booking-info p {
     font-size: 1.1rem;
     line-height: 1.6;
+}
+
+.booking-info:hover {
+    animation: float 3s ease-in-out infinite;
 }
 
 .fun-facts {
@@ -225,6 +256,15 @@ body {
     border-bottom: none;
 }
 
+.fun-facts li:hover {
+    animation: bounce 0.6s ease-in-out;
+    transform: translateX(10px);
+}
+
+.fun-facts:hover {
+    animation: wiggle 1s ease-in-out;
+}
+
 .footer {
     text-align: center;
     color: #fff;
@@ -265,6 +305,83 @@ body {
     }
 }
 
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translate3d(0,0,0);
+    }
+    40%, 43% {
+        transform: translate3d(0,-30px,0);
+    }
+    70% {
+        transform: translate3d(0,-15px,0);
+    }
+    90% {
+        transform: translate3d(0,-4px,0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-10px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes wiggle {
+    0%, 7% {
+        transform: rotateZ(0);
+    }
+    15% {
+        transform: rotateZ(-15deg);
+    }
+    20% {
+        transform: rotateZ(10deg);
+    }
+    25% {
+        transform: rotateZ(-10deg);
+    }
+    30% {
+        transform: rotateZ(6deg);
+    }
+    35% {
+        transform: rotateZ(-4deg);
+    }
+    40%, 100% {
+        transform: rotateZ(0);
+    }
+}
+
+@keyframes rainbow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .title {
@@ -295,11 +412,12 @@ body {
 
 /* Special effects for booked days */
 .calendar-day.booked::after {
-    content: "❌";
+    content: "⏰";
     position: absolute;
     top: 5px;
     right: 5px;
     font-size: 0.8rem;
+    opacity: 0.8;
 }
 
 .calendar-day.available::after {
@@ -308,4 +426,14 @@ body {
     top: 5px;
     right: 5px;
     font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.calendar-day.today::after {
+    content: "🌟";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.8rem;
+    opacity: 1;
 } 
